@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image Manager — Welcome</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+  <main class="landing">
+    <section class="landing-card">
+      <h1><span class="accent">Image</span> Manager</h1>
+      <p>Discover, upload, and share images in a Pinterest-inspired gallery. Sign in to access your dashboard or create a new account in seconds.</p>
+      <div class="landing-actions">
+        <a href="/login.html" class="btn-primary" id="enter-btn">Enter &rarr;</a>
+        <a href="/register.html" class="btn-ghost">Create account</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="/js/api.js"></script>
+  <script>
+    document.getElementById('enter-btn').addEventListener('click', function (e) {
+      e.preventDefault();
+      const token = localStorage.getItem('accessToken');
+      window.location.href = token ? '/dashboard.html' : '/login.html';
+    });
+  </script>
+</body>
+</html>

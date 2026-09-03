@@ -2,39 +2,54 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard - Image Manager</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Image Manager</title>
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
-  <div class="navbar">
-    <h2>Image Manager — <span id="user-name"></span></h2>
-    <button id="logout-btn" class="btn-secondary">Logout</button>
-  </div>
+  <nav class="navbar">
+    <a href="/" class="brand">
+      <span class="brand-dot"></span>
+      Image Manager
+    </a>
+    <div class="nav-actions">
+      <span class="nav-user">Hi, <strong id="user-name">there</strong></span>
+      <button id="logout-btn" class="btn-secondary">Logout</button>
+    </div>
+  </nav>
 
-  <div class="container">
-    <div class="upload-panel">
-      <div id="upload-alert" class="alert"></div>
-      <div class="upload-row">
-        <input type="file" id="image-input" accept="image/jpeg,image/png,image/webp" />
-        <select id="provider-select">
-          <option value="cloudinary">Cloudinary</option>
-          <option value="imagekit">ImageKit</option>
-          <option value="supabase">Supabase</option>
-        </select>
-        <button id="upload-btn" class="btn-primary">Upload</button>
+  <main class="container">
+    <section class="upload-panel">
+      <div>
+        <div id="upload-alert" class="alert"></div>
+        <div class="upload-row">
+          <input type="file" id="image-input" accept="image/jpeg,image/png,image/webp" />
+          <select id="provider-select">
+            <option value="cloudinary">Cloudinary</option>
+            <option value="imagekit">ImageKit</option>
+            <option value="supabase">Supabase</option>
+          </select>
+          <button id="upload-btn" class="btn-primary">Upload</button>
+        </div>
       </div>
       <div class="preview-box">
         <img id="preview-img" alt="Preview" />
       </div>
-    </div>
+    </section>
 
     <div id="empty-state" class="empty-state" style="display:none;">
-      No images yet. Upload your first one above.
+      No images yet. Be the first to upload one!
     </div>
-    <div id="image-grid" class="image-grid"></div>
+    <div id="image-grid" class="masonry"></div>
+  </main>
+
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true">
+    <div class="lightbox-close" id="lightbox-close">&times;</div>
+    <img id="lightbox-img" alt="" />
   </div>
 
   <script src="/js/api.js"></script>
+  <script src="/js/toast.js"></script>
   <script src="/js/upload.js"></script>
   <script src="/js/dashboard.js"></script>
 </body>

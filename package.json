@@ -2,11 +2,11 @@
   "name": "proj_image",
   "version": "1.0.0",
   "description": "Full-stack image management app with JWT auth and multi-provider storage",
-  "main": "app.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "dependencies": {
     "express": "^4.19.2",

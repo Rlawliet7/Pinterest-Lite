@@ -11,7 +11,7 @@ function initUpload() {
     const file = fileInput.files[0];
     if (!file) return;
     previewImg.src = URL.createObjectURL(file);
-    previewImg.style.display = 'block';
+    previewImg.classList.add('show');
   });
 
   uploadBtn.addEventListener('click', async () => {
@@ -45,11 +45,13 @@ function initUpload() {
 
       console.log('[LOG] Upload successful:', data.image._id);
       showUploadAlert('Image uploaded successfully', 'success');
+      if (window.toast) window.toast('Upload complete', 'success');
 
       fileInput.value = '';
-      previewImg.style.display = 'none';
+      previewImg.classList.remove('show');
+      previewImg.src = '';
 
-      if (window.loadImages) window.loadImages();
+      if (window.loadFeed) window.loadFeed();
     } catch (err) {
       console.error('[ERR] Upload request error:', err.message);
       showUploadAlert('Something went wrong during upload', 'error');
@@ -60,6 +62,7 @@ function initUpload() {
   });
 
   function showUploadAlert(message, type) {
+    if (!alertEl) return;
     alertEl.textContent = message;
     alertEl.className = `alert show alert-${type}`;
   }

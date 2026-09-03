@@ -64,6 +64,63 @@ export const listImages = asyncHandler(async (req, res) => {
   res.status(200).json({ images });
 });
 
+// ── GET /api/upload/feed ───────────────────────────────────────
+export const listFeed = asyncHandler(async (req, res) => {
+  const images = await Image.find()
+    .sort({ createdAt: -1 })
+    .populate('userId', 'name email')
+    .limit(200);
+
+  const feed = images.map((img) => ({
+    _id: img._id,
+    url: img.url,
+    originalName: img.originalName,
+    mimeType: img.mimeType,
+    size: img.size,
+    provider: img.provider,
+    createdAt: img.createdAt,
+    uploader: img.userId
+      ? { _id: img.userId._id, name: img.userId.name, email: img.userId.email }
+      : null,
+    isOwner: img.userId && req.user
+      ? img.userId._id.toString() === req.user._id.toString()
+      : false,
+  }));
+
+  console.log('[LOG] Feed listed:', feed.length, 'images');
+
+  res.status(200).json({ images: feed });
+});
+
+// ── GET /api/upload/:id/download ──────────────────────────────
+export const downloadImage = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const image = await Image.findById(id);
+  if (!image) {
+    throw new AppError('Image not found', 404);
+  }
+
+  console.log('[LOG] Downloading image:', id, 'by user:', req.user._id);
+
+  const upstream = await fetch(image.url);
+  if (!upstream.ok || !upstream.body) {
+    console.error('[ERR] Upstream fetch failed:', upstream.status);
+    throw new AppError('Failed to fetch image from storage provider', 502);
+  }
+
+  const safeName = image.originalName.replace(/[^a-zA-Z0-9._-]/g, '_');
+  res.setHeader(
+    'Content-Disposition',
+    `attachment; filename="${safeName}"; filename*=UTF-8''${encodeURIComponent(image.originalName)}`
+  );
+  res.setHeader('Content-Type', image.mimeType || 'application/octet-stream');
+
+  const arrayBuffer = await upstream.arrayBuffer();
+  res.setHeader('Content-Length', String(arrayBuffer.byteLength));
+  res.end(Buffer.from(arrayBuffer));
+});
+
 // ── DELETE /api/upload/:id ─────────────────────────────────────
 export const deleteImage = asyncHandler(async (req, res) => {
   const { id } = req.params;
