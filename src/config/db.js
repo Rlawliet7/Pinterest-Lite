@@ -28,8 +28,9 @@ async function connectDB() {
   try {
     cached.conn = await cached.promise;
   } catch (err) {
+    cached.promise = null;
     console.error('[ERR] Failed to establish MongoDB connection');
-    process.exit(1);
+    throw err;
   }
 
   mongoose.connection.on('error', (err) => {
